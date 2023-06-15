@@ -6,15 +6,20 @@
 //
 
 import SwiftUI
+import RealmSwift
 
 struct AddNewWordView: View {
     
     @State var newWord = ""
     @State var wordTranslate = ""
     @State var wordDescription = ""
+    @State var showAlert = false
+    
     @EnvironmentObject var listViewModel: ListViewModel
+    @ObservedResults(WordItem.self) var wordItems
     
     var body: some View {
+        
         VStack {
             HStack {
                 Spacer()
@@ -57,9 +62,10 @@ struct AddNewWordView: View {
                     .padding(.leading, 23)
                 
                 HStack {
-                    Rectangle()
-                        .opacity(0)
+                    TextEditor(text: $wordDescription)
                         .frame(height: 90)
+                        .colorMultiply(.gray)
+                        .autocorrectionDisabled()
                 }
                 .padding(.vertical, 13)
                 .padding(.horizontal, 23)
@@ -67,7 +73,20 @@ struct AddNewWordView: View {
             }
             Spacer()
             Button {
-                //
+                if newWord.count == 0, wordTranslate.count == 0 {
+                    showAlert.toggle()
+                } else {
+                    let word = WordItem()
+                    word.mainWord = newWord
+                    word.wordDescription = wordDescription
+                    word.wordTranslate = wordTranslate
+                    
+                    $wordItems.append(word)
+                    
+                    withAnimation {
+                        listViewModel.isShowAddView.toggle()
+                    }
+                }
             } label: {
                 Text("Save")
                     .padding(.vertical, 13)
@@ -75,6 +94,7 @@ struct AddNewWordView: View {
                     .background(.green)
                     .clipShape(Capsule())
             }
+            .alert(Text("Empty"), isPresented: $showAlert, actions: {})
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .padding(15)

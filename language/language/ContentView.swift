@@ -13,12 +13,18 @@ struct ContentView: View {
     @ObservedObject var listViewModel = ListViewModel()
     @ObservedObject var linkViewModel = LinkViewModel()
     
+    init() {
+        UITabBar.appearance().shadowImage = UIImage()
+        UITabBar.appearance().backgroundImage = UIImage()
+        UITabBar.appearance().backgroundColor = UIColor.white
+    }
+    
     var body: some View {
+        
         ZStack {
             TabView(selection: $selected) {
                 ListView()
                     .environmentObject(listViewModel)
-                    .padding(.horizontal, 15)
                     .tag(1)
                     .tabItem {
                         VStack {
@@ -37,7 +43,6 @@ struct ContentView: View {
                     }
                 LinksView()
                     .environmentObject(linkViewModel)
-                    .padding(.horizontal, 15)
                     .tag(3)
                     .tabItem {
                         VStack {
@@ -53,6 +58,10 @@ struct ContentView: View {
             }
             if linkViewModel.isShowAddLink {
                 AddNewLinkView()
+                    .environmentObject(linkViewModel)
+            }
+            if linkViewModel.isShowLinkContent {
+                LinkShowView(url: $linkViewModel.openUrl)
                     .environmentObject(linkViewModel)
             }
         }
