@@ -12,7 +12,8 @@ struct ListView: View {
     
     @State var searchText = ""
     @EnvironmentObject var listViewModel: ListViewModel
-    @ObservedResults(WordItem.self) var wordItems
+    
+    @ObservedResults(WordItem.self, sortDescriptor: SortDescriptor(keyPath: "mainWord", ascending: true)) var wordItems
     
     var body: some View {
         
@@ -24,17 +25,21 @@ struct ListView: View {
                             .resizable()
                             .frame(width: 15, height: 15)
                         TextField("Search", text: $searchText)
+                            .textInputAutocapitalization(.never)
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 16)
                     .padding(.horizontal, 20)
                     .background(Color.gray)
                     .cornerRadius(10)
+                    .searchable(text: $searchText, collection: $wordItems, keyPath: \.mainWord)
                     
                     VStack(spacing: 20) {
                         ForEach(wordItems, id: \.id) { item in
                             CardItem(cardItem: item) {
-                                $wordItems.remove(item)
+                                withAnimation {
+                                    $wordItems.remove(item)
+                                }
                             }
                         }
                     }
@@ -63,6 +68,7 @@ struct ListView: View {
 struct CardItem: View {
     
     @State var offsetX: CGFloat = 0
+    
     var cardItem: WordItem
     var onDelete: ()->()
     

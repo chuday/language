@@ -11,41 +11,24 @@ struct LinkShowView: View {
     
     @EnvironmentObject var linkViewModel: LinkViewModel
     
-    @Binding var url: String
-    
-    @State var isLoad = false
+    @State var url: String
+    @State var isLoaded = false
     @State var title = ""
     
     var body: some View {
         
         ZStack {
             VStack(spacing: 0) {
-                HStack {
-                    Circle()
-                        .frame(width: 30)
-                        .foregroundColor(isLoad ? Color(.green) : Color(.black))
-                    Spacer()
-                    Text(title)
-                        .padding(.trailing, 30)
-                        .fontWeight(.bold)
-                    Spacer()
-                    Button {
-                        linkViewModel.isShowLinkContent.toggle()
-                    } label: {
-                        Image(systemName: "xmark")
-                        
-                            .foregroundColor(.black)
-                    }
-                    
-                }
-                .padding(.horizontal, 15)
-                .padding(.bottom, 10)
-                .background(.gray)
-                
                 WebView(url: $url) { isLoad in
-                    self.isLoad = isLoad
+                    self.isLoaded = isLoad
                 }
             }
+            .navigationTitle(title)
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarItems(trailing: Circle()
+                .frame(width: 30)
+                .foregroundColor(isLoaded ? Color(.green) : .black)
+            )
         }
         .onAppear {
             if let url = URL(string: url) {
