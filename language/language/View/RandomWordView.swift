@@ -12,6 +12,7 @@ struct RandomWordView: View {
     @State var isShowTranslate = false
     
     var body: some View {
+        
         ZStack {
             VStack {
                 Spacer()
