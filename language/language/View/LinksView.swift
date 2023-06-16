@@ -15,37 +15,43 @@ struct LinksView: View {
     
     var body: some View {
         
-        ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
-            ScrollView() {
-                VStack(spacing: 10) {
-                    
-                    ForEach(links, id: \.id) { link in
-                        LinkItem(link: link) { _ in
-                            $links.remove(link)
+        NavigationView {
+            ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
+                ScrollView() {
+                    VStack(spacing: 10) {
+                        
+                        ForEach(links, id: \.id) { link in
                             
+                            NavigationLink {
+                                LinkShowView(url: link.link)
+                            } label: {
+                                LinkItem(link: link) { _ in
+                                    $links.remove(link)
+                                }
+                                .foregroundColor(.black)
+                            }
                         }
                     }
-                    
-                    
                 }
-            }
-            .padding(.horizontal, 15)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            
-            Button {
-                linkViewModel.isShowAddLink.toggle()
-            } label: {
-                ZStack {
-                    Circle()
-                        .frame(width: 56, height: 56)
-                        .foregroundColor(.green)
-                    Image(systemName: "plus")
-                        .resizable()
-                        .frame(width: 20, height: 20)
-                        .foregroundColor(.white)
+                .navigationTitle("Links")
+                .padding(.horizontal, 15)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                
+                Button {
+                    linkViewModel.isShowAddLink.toggle()
+                } label: {
+                    ZStack {
+                        Circle()
+                            .frame(width: 56, height: 56)
+                            .foregroundColor(.green)
+                        Image(systemName: "plus")
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.white)
+                    }
                 }
+                .offset(x: -20, y: -30)
             }
-            .offset(x: -20, y: -30)
         }
         .frame(maxWidth: .infinity, alignment: .trailing)
     }
@@ -54,8 +60,8 @@ struct LinksView: View {
 struct LinkItem: View {
     
     var link: LinkModel
-    
     var onDelete: (Bool)->()
+    
     @EnvironmentObject var linkViewModel: LinkViewModel
     
     var body: some View {
@@ -78,10 +84,6 @@ struct LinkItem: View {
         .padding(20)
         .background(.gray)
         .cornerRadius(10)
-        .onTapGesture {
-            linkViewModel.isShowLinkContent.toggle()
-            linkViewModel.openUrl = link.link
-        }
     }
 }
 

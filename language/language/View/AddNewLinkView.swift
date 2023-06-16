@@ -12,11 +12,13 @@ struct AddNewLinkView: View {
     
     @State var linkTitle = ""
     @State var link = ""
-    @EnvironmentObject var linkViewModel: LinkViewModel
-    @ObservedResults(LinkModel.self) var links
     @State var showAlert = false
     
+    @EnvironmentObject var linkViewModel: LinkViewModel
+    @ObservedResults(LinkModel.self) var links
+    
     var body: some View {
+        
         VStack {
             HStack {
                 Spacer()

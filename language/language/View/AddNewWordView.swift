@@ -42,6 +42,7 @@ struct AddNewWordView: View {
                     .font(.system(size: 12, weight: .black))
                 HStack {
                     TextField("Word", text: $newWord)
+                        .textInputAutocapitalization(.never)
                 }
                 .padding(.vertical, 13)
                 .padding(.horizontal, 23)
@@ -65,7 +66,6 @@ struct AddNewWordView: View {
                     TextEditor(text: $wordDescription)
                         .frame(height: 90)
                         .colorMultiply(.gray)
-                        .autocorrectionDisabled()
                 }
                 .padding(.vertical, 13)
                 .padding(.horizontal, 23)
@@ -73,7 +73,7 @@ struct AddNewWordView: View {
             }
             Spacer()
             Button {
-                if newWord.count == 0, wordTranslate.count == 0 {
+                if newWord.count == 0 || wordTranslate.count == 0 {
                     showAlert.toggle()
                 } else {
                     let word = WordItem()
